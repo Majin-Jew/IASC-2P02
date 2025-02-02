@@ -51,7 +51,14 @@ const sphereGeometry = new THREE.SphereGeometry(1)
 const sphereMaterial = new THREE.MeshNormalMaterial()
 const testSphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
 
-scene.add(testSphere)
+//scene.add(testSphere)
+
+// Torus Knot
+const geometry =new THREE.TorusKnotGeometry(2, 0.4)
+const material = new THREE.MeshNormalMaterial()
+const mesh = new THREE.Mesh(geometry, material)
+
+scene.add(mesh)
 
 // Plane
 const planeGeometry = new THREE.PlaneGeometry(10, 10, 50, 50)
@@ -62,6 +69,7 @@ const planeMaterial = new THREE.MeshBasicMaterial({
 })
  const plane = new THREE.Mesh(planeGeometry, planeMaterial)
 plane.rotation.x = Math.PI * 0.5
+
 
  scene.add(plane)
 
@@ -74,7 +82,8 @@ const ui = new dat.GUI()
 // UI Object
 const uiObject = {
    speed: 1,
-   distance: 1
+   distance: 1,
+   rotation: -0.5
 }
 
 //plane UI
@@ -85,21 +94,29 @@ planefolder
       .name("Toggle Wireframe")
 
 // testSphere UI
-const spherefolder = ui.addFolder('Sphere')
+const meshfolder = ui.addFolder('Torus Knot')
 
-      spherefolder
+      meshfolder
       .add(uiObject, 'speed')
       .min(0.1)
       .max(10)
       .step(0.1)
       .name('Speed')
 
-      spherefolder
+      meshfolder
       .add(uiObject, 'distance')
       .min(0.1)
       .max(10)
       .step(0.1)
       .name('Distance')
+
+      meshfolder
+      .add(uiObject, 'rotation')
+      .min(-Math.PI)
+      .max(Math.PI)
+      .step(0.1)
+      .name('Rotation')
+
  /********************
   ** Animation LOOP **
   ********************/ 
@@ -111,7 +128,8 @@ const animation = () =>
     const elapsedTime = clock.getElapsedTime()
 
     //Animate Sphere
-    testSphere.position.y = Math.sin(elapsedTime * uiObject.speed) * uiObject.distance
+    mesh.position.y = Math.sin(elapsedTime * uiObject.speed) * uiObject.distance,
+    mesh.position.z = Math.cos(elapsedTime * uiObject.rotation)
 
     // Update OrbitControls
     controls.update()
